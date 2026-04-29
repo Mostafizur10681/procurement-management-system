@@ -125,8 +125,9 @@
       </form>
       
       <div class="register-footer">
-        <p>Already have an account?</p>
+        <p>Already have an account?
         <router-link to="/login" class="login-link">Sign In</router-link>
+        </p>
       </div>
     </div>
   </div>
@@ -378,21 +379,15 @@ const handleRegister = async () => {
 }
 
 .main-title {
-  font-size: 32px;
-  font-weight: 800;
-  background: #193478;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0 0 12px 0;
-  letter-spacing: -0.5px;
+   margin-top: 0;
+  margin-bottom: 8px;
+  color: black !important;
 }
 
 .subtitle {
-  color: #64748b;
-  font-size: 16px;
-  margin: 0;
-  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 30px;
+  color: black !important;
 }
 
 .register-form {
@@ -402,15 +397,9 @@ const handleRegister = async () => {
 }
 
 .form-row {
-  animation: fadeInUp 0.6s ease-out backwards;
+  max-width: 100%;
+  padding-right: 50px;
 }
-
-.form-row:nth-child(1) { animation-delay: 0.1s; }
-.form-row:nth-child(2) { animation-delay: 0.2s; }
-.form-row:nth-child(3) { animation-delay: 0.3s; }
-.form-row:nth-child(4) { animation-delay: 0.4s; }
-.form-row:nth-child(5) { animation-delay: 0.5s; }
-.form-row:nth-child(6) { animation-delay: 0.6s; }
 
 @keyframes fadeInUp {
   from {
@@ -433,7 +422,7 @@ const handleRegister = async () => {
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  color: #334155;
+  color: #333 !important;
   margin-bottom: 8px;
   font-size: 14px;
 }
@@ -477,54 +466,28 @@ const handleRegister = async () => {
 
 .register-button {
   width: 100%;
-  padding: 18px 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 12px 16px;
+  background: #193478;
   color: white;
   border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  margin-top: 8px;
-  pointer-events: auto !important;
-  z-index: 1000 !important;
-  position: relative !important;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.register-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(102, 126, 234, 0.4);
-}
-
-.register-button:active:not(:disabled) {
-  transform: translateY(0);
+.register-button:hover {
+  background: #163069;
 }
 
 .register-button:disabled {
-  opacity: 0.7;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-.register-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
-
-.register-button:hover::before {
-  left: 100%;
-}
-
 .loading-spinner {
-  display: inline-block;
   width: 20px;
   height: 20px;
   animation: spin 1s linear infinite;
@@ -543,7 +506,7 @@ const handleRegister = async () => {
 }
 
 .register-footer p {
-  color: #64748b;
+  color: #333 !important;
   margin: 0 0 8px 0;
   font-size: 14px;
 }
