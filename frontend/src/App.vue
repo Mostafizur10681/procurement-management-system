@@ -1,18 +1,15 @@
 <template>
   <div id="app">
-    <el-container v-if="authStore.isAuthenticated">
-      <el-header>
-        <AppHeader />
-      </el-header>
-      <el-container>
-        <el-aside width="250px">
-          <AppSidebar />
-        </el-aside>
-        <el-main>
+    <div v-if="authStore.isAuthenticated" class="app-layout">
+      <CommonSidebar />
+      <div class="main-content-wrapper">
+        <CommonHeader />
+        <main class="main-content">
           <router-view />
-        </el-main>
-      </el-container>
-    </el-container>
+        </main>
+        <CommonFooter />
+      </div>
+    </div>
     <div v-else>
       <router-view />
     </div>
@@ -21,8 +18,9 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/auth'
-import AppHeader from '@/components/layout/AppHeader.vue'
-import AppSidebar from '@/components/layout/AppSidebar.vue'
+import CommonHeader from '@/components/common/Header.vue'
+import CommonSidebar from '@/components/common/Sidebar.vue'
+import CommonFooter from '@/components/common/Footer.vue'
 
 const authStore = useAuthStore()
 </script>
@@ -34,7 +32,36 @@ const authStore = useAuthStore()
   -moz-osx-font-smoothing: grayscale;
   color: white;
   height: 100vh;
-  background-color: #122B5A;
+  background-color: #f8f9fa;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content-wrapper {
+  flex: 1;
+  margin-left: 280px;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 90px 20px 20px 20px;
+  background-color: #f8f9fa;
+  overflow: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.main-content::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .el-header {

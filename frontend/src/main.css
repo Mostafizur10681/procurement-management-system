@@ -1,0 +1,36 @@
+/* Main CSS file for Vue application */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+/* Custom utility classes */
+.text-bold-600 {
+  font-weight: 600 !important;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem !important;
+}
+
+.my-4 {
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* Font Awesome icon sizing */
+.font-22 {
+  font-size: 22px !important;
+}
+
+/* Dashboard specific styles */
+#dashboard-analytics {
+  padding: 20px;
+  background-color: #f8f9fa;
+}

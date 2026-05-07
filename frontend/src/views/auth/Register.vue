@@ -1,133 +1,130 @@
 <template>
-  <div class="register-container">
-    <div class="floating-shapes">
-      <div class="shape shape-1"></div>
-      <div class="shape shape-2"></div>
-      <div class="shape shape-3"></div>
-      <div class="shape shape-4"></div>
-    </div>
-    
-    <div class="register-card">
-      <div class="card-header">
-        <div class="register-icon">
-          <el-icon><User /></el-icon>
-        </div>
-        <h1 class="main-title">Join Our Team</h1>
-        <p class="subtitle">Create your account and start your journey</p>
-      </div>
-      
-      <form class="register-form" @submit.prevent="handleRegister">
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">
-              <User class="label-icon" />
-              Full Name
-            </label>
-            <input
-              v-model="registerForm.name"
-              type="text"
-              class="form-input"
-              placeholder="Enter your full name"
-              required
-            />
+  <div class="min-vh-100 d-flex align-items-center justify-content-center py-4" style="background-color: #1A3578;">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-5">
+          <!-- Header -->
+          
+          
+          <!-- Registration Card -->
+          <div class="card shadow-sm">
+            <div class="text-center mb-4">
+            <div class="mb-3 mt-3">
+              <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                <el-icon class="text-white" style="font-size: 32px;"><User /></el-icon>
+              </div>
+            </div>
+            <h2 class="h3 mb-2 text-dark">Create your account</h2>
+            <p class="text-muted">Or sign in to your existing account</p>
+          </div>
+            <div class="card-body p-4">
+              <form @submit.prevent="handleRegister">
+                <!-- Name and Email Row -->
+                <div class="row mb-3">
+                  <div class="col-md-12 mb-3 mb-md-0">
+                    <label for="name" class="form-label text-dark">Full Name</label>
+                    <input
+                      id="name"
+                      v-model="registerForm.name"
+                      type="text"
+                      class="form-control"
+                      placeholder="Full Name"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-12 mt-3">
+                    <label for="email" class="form-label text-dark">Email address</label>
+                    <input
+                      id="email"
+                      v-model="registerForm.email"
+                      type="email"
+                      class="form-control"
+                      placeholder="you@example.com"
+                      autocomplete="email"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <!-- Role Field -->
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <label for="role" class="form-label text-dark">Role</label>
+                    <select
+                      id="role"
+                      v-model="registerForm.role"
+                      class="form-select"
+                      required
+                    >
+                      <option value="">Select a role</option>
+                      <option value="user">User</option>
+                      <option value="manager">Manager</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Password Fields -->
+                <div class="row mb-3">
+                  <div class="col-12">
+                    <label for="password" class="form-label text-dark">Password</label>
+                    <input
+                      id="password"
+                      v-model="registerForm.password"
+                      type="password"
+                      class="form-control"
+                      placeholder="••••••••"
+                      autocomplete="new-password"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="row mb-4">
+                  <div class="col-12">
+                    <label for="password_confirmation" class="form-label text-dark">Confirm Password</label>
+                    <input
+                      id="password_confirmation"
+                      v-model="registerForm.password_confirmation"
+                      type="password"
+                      class="form-control"
+                      placeholder="••••••••"
+                      autocomplete="new-password"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                  <button
+                    type="submit"
+                    :disabled="loading"
+                    class="register-button btn-lg"
+                    @click="handleRegister"
+                  >
+                    <span v-if="loading" class="d-flex align-items-center">
+                      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      Processing...
+                    </span>
+                    <span v-else>Sign Up</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+            <!-- Footer Link -->
+          <div class="text-center mt-1 mb-3">
+            <div class="position-relative">
+              <small class="text-muted">
+                  Already have an account? 
+                  <router-link to="/login" class="text-primary text-decoration-none">
+                    Sign in
+                  </router-link>
+                </small>
+            </div>
+          </div>
           </div>
         </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">
-              <Message class="label-icon" />
-              Email Address
-            </label>
-            <input
-              v-model="registerForm.email"
-              type="email"
-              class="form-input"
-              placeholder="your@email.com"
-              required
-            />
-          </div>
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">
-              <OfficeBuilding class="label-icon" />
-              Department
-            </label>
-            <input
-              v-model="registerForm.department"
-              type="text"
-              class="form-input"
-              placeholder="Enter your department"
-              required
-            />
-          </div>
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">
-              <svg viewBox="0 0 24 24" fill="currentColor" class="label-icon">
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-              </svg>
-              Role
-            </label>
-            <select v-model="registerForm.role" class="form-input" required>
-              <option value="">Select your role</option>
-              <option value="user">User</option>
-              <option value="manager">Manager</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">
-              <Lock class="label-icon" />
-              Password
-            </label>
-            <input
-              v-model="registerForm.password"
-              type="password"
-              class="form-input"
-              placeholder="Create a strong password"
-              required
-            />
-          </div>
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">
-              <Lock class="label-icon" />
-              Confirm Password
-            </label>
-            <input
-              v-model="registerForm.password_confirmation"
-              type="password"
-              class="form-input"
-              placeholder="Confirm your password"
-              required
-            />
-          </div>
-        </div>
-        
-        <button type="submit" class="register-button" :disabled="loading">
-          <span v-if="loading" class="loading-spinner">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"/>
-            </svg>
-          </span>
-          <span v-else>Create Account</span>
-        </button>
-      </form>
-      
-      <div class="register-footer">
-        <p>Already have an account?
-        <router-link to="/login" class="login-link">Sign In</router-link>
-        </p>
       </div>
     </div>
   </div>
@@ -138,7 +135,7 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { ElMessage } from 'element-plus'
-import { User, Message, Lock, OfficeBuilding } from '@element-plus/icons-vue'
+import { User, Message, OfficeBuilding, Lock, ArrowRight } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -149,7 +146,6 @@ const loading = ref(false)
 const registerForm = reactive({
   name: '',
   email: '',
-  department: '',
   role: 'user',
   password: '',
   password_confirmation: ''
@@ -190,18 +186,8 @@ const rules = {
 }
 
 const handleRegister = async () => {
-  // Simple test to verify click is working
-  alert('Register button clicked! This is a test.')
-  console.log('Register button clicked')
-  console.log('Form data:', registerForm)
-  
-  if (!registerFormRef.value) {
-    console.error('Form ref not available')
-    return
-  }
-  
   // Check if all required fields are filled
-  if (!registerForm.name || !registerForm.email || !registerForm.department || !registerForm.role || !registerForm.password) {
+  if (!registerForm.name || !registerForm.email || !registerForm.role || !registerForm.password) {
     ElMessage.error('Please fill in all required fields')
     return
   }
@@ -214,21 +200,38 @@ const handleRegister = async () => {
   try {
     loading.value = true
     
+    console.log('Form data being sent:', registerForm)
     console.log('Calling register API...')
     const response = await authStore.register(registerForm)
     console.log('Registration successful:', response)
     
-    ElMessage.success('Registration successful')
-    router.push('/dashboard')
+    ElMessage.success('Registration successful! Redirecting to login...')
+    
+    // Clear form
+    Object.keys(registerForm).forEach(key => {
+      registerForm[key] = ''
+    })
+    registerForm.role = 'user'
+    
+    // Redirect to login page for user to sign in
+    setTimeout(() => {
+      router.push('/login')
+    }, 1500)
   } catch (error) {
     console.error('Registration error:', error)
-    if (error.response?.data?.errors) {
+    console.error('Error response:', error.response?.data)
+    
+    if (error.response?.status === 0) {
+      ElMessage.error('Cannot connect to server. Please check if the backend is running.')
+    } else if (error.response?.data?.errors) {
       const errors = Object.values(error.response.data.errors).flat()
       ElMessage.error(errors[0])
     } else if (error.response?.data?.error) {
       ElMessage.error(error.response.data.error)
+    } else if (error.response?.data?.message) {
+      ElMessage.error(error.response.data.message)
     } else {
-      ElMessage.error('Registration failed. Please try again.')
+      ElMessage.error(`Registration failed: ${error.message || 'Please try again.'}`)
     }
   } finally {
     loading.value = false
@@ -237,231 +240,41 @@ const handleRegister = async () => {
 </script>
 
 <style scoped>
-.register-container {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #122B5A;
-  padding: 20px;
-  position: relative;
-  overflow: hidden;
+/* Bootstrap custom styles */
+.card {
+  border: none;
+  border-radius: 0.5rem;
 }
 
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
-.floating-shapes {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  pointer-events: none;
+.form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
-.shape {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(5px);
-  animation: float 20s infinite ease-in-out;
+.btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
 }
 
-.shape-1 {
-  width: 80px;
-  height: 80px;
-  top: 10%;
-  left: 10%;
-  animation-delay: 0s;
+.btn-primary:hover {
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
 }
 
-.shape-2 {
-  width: 120px;
-  height: 120px;
-  top: 70%;
-  right: 10%;
-  animation-delay: 2s;
+.btn-primary:disabled {
+  background-color: #6c757d;
+  border-color: #6c757d;
 }
 
-.shape-3 {
-  width: 60px;
-  height: 60px;
-  bottom: 10%;
-  left: 30%;
-  animation-delay: 4s;
-}
-
-.shape-4 {
-  width: 100px;
-  height: 100px;
-  top: 20%;
-  right: 30%;
-  animation-delay: 6s;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 0.7;
-  }
-  25% {
-    transform: translateY(-20px) rotate(90deg);
-    opacity: 0.9;
-  }
-  50% {
-    transform: translateY(0) rotate(180deg);
-    opacity: 0.7;
-  }
-  75% {
-    transform: translateY(20px) rotate(270deg);
-    opacity: 0.9;
-  }
-}
-
-.register-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 24px;
-  padding: 40px;
-  width: 100%;
-  max-width: 480px;
-  box-shadow: 
-    0 32px 64px rgba(0, 0, 0, 0.1),
-    0 16px 32px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  position: relative;
-  z-index: 10;
-  animation: slideUp 0.8s ease-out;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.card-header {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.register-icon {
-  margin-bottom: 16px;
-  margin-top: 0;
-  display: flex;
-  justify-content: center;
-}
-
-.register-icon .el-icon {
-  font-size: 48px;
-  color: #193478;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
-  }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 8px 40px rgba(102, 126, 234, 0.5);
-  }
-}
-
-.main-title {
-   margin-top: 0;
-  margin-bottom: 8px;
-  color: black !important;
-}
-
-.subtitle {
-  margin-top: 0;
-  margin-bottom: 30px;
-  color: black !important;
-}
-
-.register-form {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.form-row {
-  max-width: 100%;
-  padding-right: 50px;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  color: #333 !important;
-  margin-bottom: 8px;
-  font-size: 14px;
-}
-
-.label-icon {
-  width: 16px;
-  height: 16px;
-  color: #667eea;
-}
-
-.form-input {
-  width: 100%;
-  padding: 16px 20px;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  background: white;
-  color: #1e293b;
-  pointer-events: auto !important;
-  cursor: text !important;
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  opacity: 1 !important;
-  z-index: 1000 !important;
-  position: relative !important;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-  transform: translateY(-2px);
-}
-
-.form-input::placeholder {
-  color: #94a3b8;
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
 }
 
 .register-button {
@@ -476,50 +289,5 @@ const handleRegister = async () => {
   cursor: pointer;
   width: 100%;
   box-sizing: border-box;
-}
-
-.register-button:hover {
-  background: #163069;
-}
-
-.register-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.loading-spinner {
-  width: 20px;
-  height: 20px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.register-footer {
-  text-align: center;
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid #e2e8f0;
-}
-
-.register-footer p {
-  color: #333 !important;
-  margin: 0 0 8px 0;
-  font-size: 14px;
-}
-
-.login-link {
-  color: #667eea;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-.login-link:hover {
-  color: #764ba2;
-  text-decoration: underline;
 }
 </style>
