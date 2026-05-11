@@ -35,8 +35,12 @@
               <span class="nav-text" v-if="!isCollapsed">Workflow Team</span>
             </router-link>
             <router-link to="/procurement-setup/vendor-onboard" class="submenu-item">
-              <i class="fas fa-user-plus"></i>
+              <i class="fas fa-map-marker-alt"></i>
               <span class="nav-text" v-if="!isCollapsed">Vendor Onboard</span>
+            </router-link>
+            <router-link to="/procurement-setup/vendor-point-area" class="submenu-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span class="nav-text" v-if="!isCollapsed">Vendor Point Area</span>
             </router-link>
             <router-link to="/procurement-setup/amount-range" class="submenu-item">
               <i class="fas fa-dollar-sign"></i>
