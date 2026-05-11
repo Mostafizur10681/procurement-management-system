@@ -120,6 +120,12 @@ const routes = [
     name: 'VendorOnboard',
     component: () => import('@/views/setup/VendorOnboard.vue'),
     meta: { requiresAuth: true, requiresRole: ['admin', 'manager'] }
+  },
+  {
+    path: '/procurement-setup/amount-range',
+    name: 'AmountRange',
+    component: () => import('@/views/setup/AmountRange.vue'),
+    meta: { requiresAuth: true, requiresRole: ['admin', 'manager'] }
   }
 ]
 

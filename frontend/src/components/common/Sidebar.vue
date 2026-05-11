@@ -34,21 +34,17 @@
               <i class="fas fa-users"></i>
               <span class="nav-text" v-if="!isCollapsed">Workflow Team</span>
             </router-link>
-            <router-link to="/procurement-setup/categories" class="submenu-item">
-              <i class="fas fa-tags"></i>
-              <span class="nav-text" v-if="!isCollapsed">Categories</span>
+            <router-link to="/procurement-setup/vendor-onboard" class="submenu-item">
+              <i class="fas fa-user-plus"></i>
+              <span class="nav-text" v-if="!isCollapsed">Vendor Onboard</span>
+            </router-link>
+            <router-link to="/procurement-setup/amount-range" class="submenu-item">
+              <i class="fas fa-dollar-sign"></i>
+              <span class="nav-text" v-if="!isCollapsed">Amount Range</span>
             </router-link>
             <router-link to="/procurement-setup/attachment-types" class="submenu-item">
               <i class="fas fa-paperclip"></i>
               <span class="nav-text" v-if="!isCollapsed">Attachment Types</span>
-            </router-link>
-            <router-link to="/procurement-setup/departments" class="submenu-item">
-              <i class="fas fa-building"></i>
-              <span class="nav-text" v-if="!isCollapsed">Departments</span>
-            </router-link>
-            <router-link to="/procurement-setup/committees" class="submenu-item">
-              <i class="fas fa-users-cog"></i>
-              <span class="nav-text" v-if="!isCollapsed">Committees</span>
             </router-link>
             <router-link to="/procurement-setup/vendor-relationships" class="submenu-item">
               <i class="fas fa-handshake"></i>
@@ -57,10 +53,6 @@
             <router-link to="/procurement-setup/publications" class="submenu-item">
               <i class="fas fa-newspaper"></i>
               <span class="nav-text" v-if="!isCollapsed">Publications</span>
-            </router-link>
-            <router-link to="/procurement-setup/vendor-onboard" class="submenu-item">
-              <i class="fas fa-user-plus"></i>
-              <span class="nav-text" v-if="!isCollapsed">Vendor Onboard</span>
             </router-link>
           </div>
         </div>
