@@ -86,6 +86,12 @@ const routes = [
     meta: { requiresAuth: true, requiresRole: ['admin', 'manager'] }
   },
   {
+    path: '/procurement-setup/workflow-team',
+    name: 'WorkflowTeam',
+    component: () => import('@/views/setup/Workflows.vue'),
+    meta: { requiresAuth: true, requiresRole: ['admin', 'manager'] }
+  },
+  {
     path: '/committees',
     name: 'Committees',
     component: () => import('@/views/setup/Committees.vue'),
@@ -107,6 +113,12 @@ const routes = [
     path: '/vendor-relationships',
     name: 'VendorRelationships',
     component: () => import('@/views/setup/VendorRelationships.vue'),
+    meta: { requiresAuth: true, requiresRole: ['admin', 'manager'] }
+  },
+  {
+    path: '/procurement-setup/vendor-onboard',
+    name: 'VendorOnboard',
+    component: () => import('@/views/setup/VendorOnboard.vue'),
     meta: { requiresAuth: true, requiresRole: ['admin', 'manager'] }
   }
 ]

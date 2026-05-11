@@ -8,201 +8,268 @@
       <div class="shape shape-5"></div>
     </div>
     
-    <div class="page-header">
+    <!-- <div class="page-header">
       <div class="header-content">
         <div class="title-section">
-          <h1 class="main-title">Workflow Setup</h1>
-          <p class="subtitle">Configure and manage procurement workflows</p>
+          <h1 class="main-title">Workflow Team</h1>
+          <p class="subtitle">Manage and configure workflow team members and roles</p>
         </div>
-        <button class="create-button" @click="showCreateDialog = true">
-          <el-icon><Plus /></el-icon>
-          Create Workflow
-        </button>
       </div>
-    </div>
+    </div> -->
 
-    <div class="workflows-card">
-      <div class="table-container">
-        <el-table :data="workflows" v-loading="loading" class="modern-table">
-          <el-table-column prop="name" label="Workflow Name" min-width="200" />
-          <el-table-column prop="rule_name" label="Rule Type" min-width="180" />
-          <el-table-column prop="description" label="Description" min-width="200" />
-          <el-table-column label="Steps" width="120">
-            <template #default="scope">
-              <span class="steps-tag">{{ scope.row.steps?.length || 0 }} steps</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="is_active" label="Status" width="100">
-            <template #default="scope">
-              <span class="status-tag" :class="scope.row.is_active ? 'active' : 'inactive'">
-                {{ scope.row.is_active ? 'Active' : 'Inactive' }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="Actions" width="150" fixed="right">
-            <template #default="scope">
-              <div class="action-buttons">
-                <button class="action-button edit" @click="editWorkflow(scope.row)">
-                  <el-icon><Edit /></el-icon>
-                </button>
-                <button class="action-button delete" @click="deleteWorkflow(scope.row)">
-                  <el-icon><Delete /></el-icon>
-                </button>
+    <!-- Workflow Form Section -->
+    <div class="workflow-form-section">
+      <div class="card workflow-card shadow-lg">
+        <div class="card-header">
+          <h3 class="header-text">Workflow Setup Form</h3>
+        </div>
+        <div class="card-body">
+          <form @submit.prevent="handleSubmit">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="required text-dark">Approval Type</label>
+                  <select v-model="form.approval_type" class="form-control" required>
+                    <option value="">Select One</option>
+                    <option
+                      v-for="(name, id) in workflowRules"
+                      :key="id"
+                      :value="id"
+                    >
+                      {{ name }}
+                    </option>
+                  </select>
+                </div>
               </div>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </div>
-
-    <!-- Create/Edit Dialog -->
-    <el-dialog
-      v-model="showCreateDialog"
-      :title="editingWorkflow ? 'Edit Workflow' : 'Create Workflow'"
-      width="900px"
-      :show-close="false"
-      :close-on-click-modal="false"
-    >
-      <div class="workflow-form">
-        <!-- Blue Header -->
-        <div class="form-header">
-          <h3>Workflow Setup form</h3>
-        </div>
-
-        <!-- Top Input Fields -->
-        <div class="form-fields">
-          <el-row :gutter="20">
-            <el-col :span="8">
-              <el-form-item label="Approval Type*">
-                <el-select
-                  v-model="form.approval_type"
-                  placeholder="Select One"
-                  style="width: 100%"
-                >
-                  <el-option
-                    v-for="(name, id) in workflowRules"
-                    :key="id"
-                    :label="name"
-                    :value="id"
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="required text-dark">Work Flow Name</label>
+                  <input
+                    type="text"
+                    v-model="form.name"
+                    class="form-control"
+                    placeholder="Enter workflow name"
+                    required
                   />
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="Work Flow Name*">
-                <el-input
-                  v-model="form.name"
-                  placeholder="Enter workflow name"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="Active">
-                <el-radio-group v-model="form.is_active">
-                  <el-radio :label="true">Yes</el-radio>
-                  <el-radio :label="false">No</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-          </el-row>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="text-dark">Amount From</label>
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      v-model="form.amount_from"
+                      class="form-control"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="text-dark">Amount To</label>
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      v-model="form.amount_to"
+                      class="form-control"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 mt-3">
+                <div class="form-group">
+                  <label class="text-dark">Active</label>
+                  <div class="switch-toggle">
+                    <label class="switch" :class="{ 'switch-red': isSwitchRed }">
+                      <input
+                        type="checkbox"
+                        v-model="isActive"
+                        @change="toggleActiveStatus"
+                      />
+                      <span class="slider"></span>
+                      <span class="switch-icon">
+                        <i class="fas fa-check" v-if="isActive && !isSwitchRed"></i>
+                      </span>
+                    </label>
+                    <span class="switch-label">{{ isActive && !isSwitchRed ? 'Active' : 'Inactive' }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Workflow Step Section -->
+            <div class="row mt-4">
+              <div class="col-md-12">
+                <fieldset class="border p-2 mb-2">
+                  <legend class="w-auto text-bold-600 text-dark">Workflow Step</legend>
+                  
+                  <div class="dual-list-container">
+                    <!-- Left Panel -->
+                    <div class="list-panel left-panel">
+                      <div class="panel-header">
+                        <input
+                          type="text"
+                          v-model="leftSearch"
+                          placeholder="Search..."
+                          class="form-control form-control-sm"
+                        />
+                      </div>
+                      <div class="panel-title text-dark">Team Member/Designation</div>
+                      <div class="panel-content">
+                        <div class="checkbox-list">
+                          <div
+                            v-for="member in availableMembers"
+                            :key="member.id"
+                            class="form-check text-dark"
+                          >
+                            <input
+                              type="checkbox"
+                              :id="'member_' + member.id"
+                              v-model="member.selected"
+                              @change="handleCheckboxClick(member)"
+                              class="form-check-input text-dark"
+                            />
+                            <label :for="'member_' + member.id" class="form-check-label" style="color: #212529 !important;">
+                              {{ member.name }}
+                              <span class="member-department" style="color: #6c757d !important;">({{ member.department }})</span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="panel-footer">
+                        <button type="button" @click="selectAllLeft" class="btn btn-sm btn-outline-primary">
+                          Select All
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Transfer Buttons -->
+                    <div class="transfer-buttons">
+                      <button
+                        type="button"
+                        @click="transferRight"
+                        :disabled="selectedLeftCount === 0"
+                        class="btn btn-sm btn-primary"
+                      >
+                        →
+                      </button>
+                      <button
+                        type="button"
+                        @click="transferLeft"
+                        :disabled="selectedRightCount === 0"
+                        class="btn btn-sm btn-primary"
+                      >
+                        ←
+                      </button>
+                    </div>
+
+                    <!-- Right Panel -->
+                    <div class="list-panel right-panel">
+                      <div class="panel-header">
+                        <input
+                          type="text"
+                          v-model="rightSearch"
+                          placeholder="Search..."
+                          class="form-control form-control-sm"
+                        />
+                      </div>
+                      <div class="panel-title text-dark">Assign to Review</div>
+                      <div class="panel-content">
+                        <div class="checkbox-list">
+                          <div
+                            v-for="member in assignedMembers"
+                            :key="member.id"
+                            class="form-check text-dark"
+                          >
+                            <input
+                              type="checkbox"
+                              :id="'assigned_' + member.id"
+                              v-model="member.selected"
+                              @change="handleCheckboxClick(member)"
+                              class="form-check-input text-dark"
+                            />
+                            <label :for="'assigned_' + member.id" class="form-check-label" style="color: #212529 !important;">
+                              {{ member.name }}
+                              <span class="member-department" style="color: #6c757d !important;">({{ member.department }})</span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="panel-footer">
+                        <button type="button" @click="selectAllRight" class="btn btn-sm btn-outline-secondary">
+                          Deselect All
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+            
+            <div class="row mt-3">
+              <div class="col-md-12 d-flex justify-content-end">
+                <button type="button" @click="cancelForm" class="btn btn-danger me-2">
+                  <i class="fas fa-times"></i> Cancel
+                </button>
+                <button type="submit" class="btn btn-success" :disabled="loading">
+                  <i class="fas fa-save"></i> Save
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
+      </div>
+    </div>
 
-        <!-- Workflow Step Section -->
-        <div class="workflow-step-section">
-          <div class="section-header">
-            <h4>Workflow Step</h4>
-          </div>
-          
-          <div class="dual-list-container">
-            <!-- Left Panel -->
-            <div class="list-panel left-panel">
-              <div class="panel-header">
-                <el-input
-                  v-model="leftSearch"
-                  placeholder="Search..."
-                  size="small"
-                  prefix-icon="Search"
-                />
-              </div>
-              <div class="panel-title">Team Member/Designation</div>
-              <div class="panel-content">
-                <div class="checkbox-list">
-                  <el-checkbox
-                    v-for="member in availableMembers"
-                    :key="member.id"
-                    v-model="member.selected"
-                    class="member-checkbox"
-                  >
-                    {{ member.name }}
-                    <span class="member-department">({{ member.department }})</span>
-                  </el-checkbox>
-                </div>
-              </div>
-              <div class="panel-footer">
-                <el-button size="small" @click="selectAllLeft">Select All</el-button>
-              </div>
-            </div>
-
-            <!-- Transfer Buttons -->
-            <div class="transfer-buttons">
-              <el-button
-                type="primary"
-                size="small"
-                @click="transferRight"
-                :disabled="selectedLeftCount === 0"
-              >
-                <el-icon><ArrowRight /></el-icon>
-              </el-button>
-              <el-button
-                type="primary"
-                size="small"
-                @click="transferLeft"
-                :disabled="selectedRightCount === 0"
-              >
-                <el-icon><ArrowLeft /></el-icon>
-              </el-button>
-            </div>
-
-            <!-- Right Panel -->
-            <div class="list-panel right-panel">
-              <div class="panel-header">
-                <el-input
-                  v-model="rightSearch"
-                  placeholder="Search..."
-                  size="small"
-                  prefix-icon="Search"
-                />
-              </div>
-              <div class="panel-title">Assign to Review</div>
-              <div class="panel-content">
-                <div class="checkbox-list">
-                  <el-checkbox
-                    v-for="member in assignedMembers"
-                    :key="member.id"
-                    v-model="member.selected"
-                    class="member-checkbox"
-                  >
-                    {{ member.name }}
-                    <span class="member-department">({{ member.department }})</span>
-                  </el-checkbox>
-                </div>
-              </div>
-              <div class="panel-footer">
-                <el-button size="small" @click="selectAllRight">Deselect All</el-button>
-              </div>
-            </div>
+    <!-- Workflow List Section -->
+    <div class="workflow-list-section mt-4">
+      <div class="card shadow-lg">
+        <div class="card-body">
+          <h4 class="card-title text-bold-600">Workflow List</h4>
+          <hr>
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>SL</th>
+                  <th>Approval Type Name</th>
+                  <th>Workflow Name</th>
+                  <th>Approval Sequence</th>
+                  <th>Active Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="workflow in workflows" :key="workflow.DT_RowIndex">
+                  <td>{{ workflow.DT_RowIndex }}</td>
+                  <td>{{ workflow.rule_name }}</td>
+                  <td>{{ workflow.work_flow_name }}</td>
+                  <td>{{ workflow.approval_seq_no }}</td>
+                  <td>
+                    <span class="badge" :class="workflow.active_yn === 'Y' ? 'badge-success' : 'badge-danger'">
+                      {{ workflow.active_yn === 'Y' ? 'Active' : 'Inactive' }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="btn-group">
+                      <button class="btn btn-sm btn-outline-primary" @click="editWorkflow(workflow)">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-danger" @click="deleteWorkflow(workflow)">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-      
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button type="success" @click="handleSubmit" :loading="loading">
-            Save
-          </el-button>
-        </div>
-      </template>
-    </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -212,15 +279,78 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Edit, Delete, ArrowRight, ArrowLeft, Search } from '@element-plus/icons-vue'
 
 const loading = ref(false)
-const workflows = ref([])
-const workflowRules = ref([])
-const showCreateDialog = ref(false)
+
+// Switch toggle state
+const isActive = computed({
+  get: () => form.active_yn === 'Y',
+  set: (value) => {
+    form.active_yn = value ? 'Y' : 'N'
+  }
+})
+
+// Switch state for styling (red when clicked)
+const isSwitchRed = ref(false)
+
+// Toggle button methods
+const toggleActiveStatus = () => {
+  if (isSwitchRed.value) {
+    // If switch was red and clicked again, make it green
+    isActive.value = true
+    isSwitchRed.value = false
+  } else {
+    // First click - make it red
+    isActive.value = false
+    isSwitchRed.value = true
+  }
+}
+
+const workflows = ref([
+  {
+    DT_RowIndex: 1,
+    rule_name: 'Purchase Requisition',
+    work_flow_name: 'PR Workflow',
+    approval_seq_no: '1,2,3',
+    active_yn: 'Y'
+  },
+  {
+    DT_RowIndex: 2,
+    rule_name: 'Purchase Order',
+    work_flow_name: 'PO Workflow',
+    approval_seq_no: '1,2,3,4',
+    active_yn: 'Y'
+  },
+  {
+    DT_RowIndex: 3,
+    rule_name: 'Bill Processing',
+    work_flow_name: 'Bill Workflow',
+    approval_seq_no: '1,2,3,4,5',
+    active_yn: 'N'
+  }
+])
+const workflowRules = ref({
+  'PR': 'Purchase Requisition',
+  'PO': 'Purchase Order',
+  'BILL': 'Bill Processing',
+  'CONTRACT': 'Contract Management',
+  'VENDOR': 'Vendor Management'
+})
 const editingWorkflow = ref(null)
-const formRef = ref()
 
 // Search terms
 const leftSearch = ref('')
 const rightSearch = ref('')
+
+// Departments data
+const departments = ref([
+  { id: 1, name: 'Board Department' },
+  { id: 2, name: 'HR, Finance, Accounts' },
+  { id: 3, name: 'Operations' },
+  { id: 4, name: 'Finance' },
+  { id: 5, name: 'IT' },
+  { id: 6, name: 'Procurement' },
+  { id: 7, name: 'Admin' },
+  { id: 8, name: 'Marketing' }
+])
 
 // Team members data
 const allMembers = ref([
@@ -237,7 +367,9 @@ const allMembers = ref([
 const form = reactive({
   name: '',
   approval_type: null,
-  is_active: true,
+  amount_from: 0,
+  amount_to: 0,
+  active_yn: 'Y',
   assigned_members: []
 })
 
@@ -261,6 +393,36 @@ const assignedMembers = computed(() => {
     )
 })
 
+// Handle checkbox click for individual items
+const handleCheckboxClick = (member) => {
+  console.log('Checkbox clicked:', member.name, 'selected:', member.selected)
+  
+  // Check if member is currently in assigned panel
+  const isCurrentlyAssigned = form.assigned_members.some(m => m.id === member.id)
+  
+  if (isCurrentlyAssigned) {
+    // Move back to available panel (right to left)
+    const index = form.assigned_members.findIndex(m => m.id === member.id)
+    if (index > -1) {
+      form.assigned_members.splice(index, 1)
+    }
+    console.log('Moved back to available:', member.name)
+  } else {
+    // Move to assigned panel (left to right)
+    if (!form.assigned_members.some(m => m.id === member.id)) {
+      form.assigned_members.push({
+        id: member.id,
+        name: member.name,
+        department: member.department
+      })
+    }
+    console.log('Moved to assigned:', member.name)
+  }
+  
+  // Reset checkbox state
+  member.selected = false
+}
+
 const selectedLeftCount = computed(() => {
   return availableMembers.value.filter(m => m.selected).length
 })
@@ -268,6 +430,30 @@ const selectedLeftCount = computed(() => {
 const selectedRightCount = computed(() => {
   return assignedMembers.value.filter(m => m.selected).length
 })
+
+const cancelForm = () => {
+  // Clear all form data
+  form.approval_type = ''
+  form.name = ''
+  form.amount_from = ''
+  form.amount_to = ''
+  form.active_yn = 'Y'
+  form.assigned_members = []
+  
+  // Clear all member selections
+  allMembers.value.forEach(member => {
+    member.selected = false
+  })
+  
+  // Clear search inputs
+  leftSearch.value = ''
+  rightSearch.value = ''
+  
+  // Reset switch state
+  isSwitchRed.value = false
+  
+  ElMessage.info('Form has been cleared')
+}
 
 const rules = {
   name: [
@@ -306,15 +492,49 @@ const transferLeft = () => {
 }
 
 const selectAllLeft = () => {
+  // Select all available members and move to assigned
+  const selectedItems = []
   availableMembers.value.forEach(member => {
     member.selected = true
+    selectedItems.push({
+      id: member.id,
+      name: member.name,
+      department: member.department
+    })
+  })
+  
+  // Add selected items to assigned_members array
+  form.assigned_members = [...form.assigned_members, ...selectedItems]
+  
+  // Clear available panel selections
+  availableMembers.value.forEach(member => {
+    member.selected = false
   })
 }
 
 const selectAllRight = () => {
+  // Select all assigned members and move back to available
+  const selectedItems = []
   assignedMembers.value.forEach(member => {
     member.selected = true
+    selectedItems.push(member.id)
   })
+  
+  // Remove selected items from assigned_members array
+  const itemsToRemove = form.assigned_members.filter(m => 
+    selectedItems.includes(m.id)
+  )
+  form.assigned_members = form.assigned_members.filter(m => 
+    !selectedItems.includes(m.id)
+  )
+  
+  // Clear assigned panel selections
+  assignedMembers.value.forEach(member => {
+    member.selected = false
+  })
+  
+  // Add items back to available members (they should now appear in left panel)
+  // The computed properties will handle this automatically
 }
 
 const loadWorkflowRules = async () => {
@@ -483,15 +703,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.workflows {
-  padding: 32px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
-  background-size: 400% 400%;
-  animation: gradientShift 20s ease infinite;
-  min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-}
 
 @keyframes gradientShift {
   0% { background-position: 0% 50%; }
@@ -838,6 +1049,141 @@ onMounted(() => {
   z-index: 1;
 }
 
+.header-text{
+  font-size: 24px;
+  color: #17316E !important;
+  font-weight: 600;
+}
+
+/* Toggle Button Group Styles */
+.toggle-button-group {
+  display: flex;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  background: white;
+}
+
+.toggle-button {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  outline: none;
+  position: relative;
+}
+
+.toggle-button:hover {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+.toggle-button.active {
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
+}
+
+.toggle-button.active:hover {
+  background-color: #0056b3;
+}
+
+.toggle-button:first-child {
+  border-right: 1px solid #dee2e6;
+}
+
+.toggle-button:last-child {
+  border-left: 1px solid #dee2e6;
+}
+
+/* Switch Toggle Styles */
+.switch-toggle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.switch input:checked + .slider {
+  background-color: #28a745;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.switch-red input:checked + .slider {
+  background-color: #dc3545;
+}
+
+.switch-red input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.switch-icon {
+  position: absolute;
+  left: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 10px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.switch input:checked ~ .switch-icon {
+  opacity: 1;
+}
+
+.switch-label {
+  font-weight: 500;
+  color: #495057;
+  user-select: none;
+}
+
 .form-fields {
   margin-bottom: 30px;
   padding: 20px;
@@ -907,27 +1253,7 @@ onMounted(() => {
   position: relative;
 }
 
-.section-header::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
-  animation: gradient 3s ease infinite;
-  background-size: 200% 100%;
-}
-
-@keyframes gradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
 .section-header h4 {
-  margin: 0;
-  font-size: 16px;
   font-weight: 600;
   color: #2d3748;
   display: flex;

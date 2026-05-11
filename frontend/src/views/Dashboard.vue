@@ -3,7 +3,7 @@
           <!-- Welcome Card -->
           <div class="row">
             <div class="col-md-12 my-4">
-              <div class="card">
+              <div class="card welcome-card">
                 <div class="card-content">
                   <div class="card-body">
                     <div class="text-center">
@@ -18,7 +18,7 @@
           <!-- Stats Cards -->
           <div class="row">
             <div class="col-md-6 col-xl-4 mb-4">
-              <div class="widget-rounded-circle card">
+              <div class="widget-rounded-circle card  welcome-card">
                 <div class="card-body">
                   <div class="row">
                     <div class="col-5">
@@ -38,7 +38,7 @@
             </div>
 
             <div class="col-md-6 col-xl-4">
-              <div class="widget-rounded-circle card mb-4">
+              <div class="widget-rounded-circle card mb-4  welcome-card">
                 <div class="card-body">
                   <div class="row">
                     <div class="col-5">
@@ -58,7 +58,7 @@
             </div>
 
             <div class="col-md-6 col-xl-4">
-              <div class="widget-rounded-circle card mb-4">
+              <div class="widget-rounded-circle card mb-4 welcome-card">
                 <div class="card-body">
                   <div class="row">
                     <div class="col-5">
@@ -81,13 +81,15 @@
           <!-- Charts Section -->
           <div class="row mb-4">
             <div class="col-md-12">
-              <div class="card">
+              <div class="card  welcome-card">
                 <div class="card-content">
                   <div class="card-body">
                     <div class="row p-2">
                       <div class="col-md-12 col-lg-5 d-flex pt-4 pl-2">
                         <div>
-                          <div class="pieID pie" ref="pieChart"></div>
+                          <div class="pieID pie" ref="pieChart">
+  <canvas id="pieChartCanvas" width="200" height="200"></canvas>
+</div>
                           <div class="px-2 chart-title">
                             <p class="text-dark">Purchase Order</p>
                           </div>
@@ -352,8 +354,55 @@ const initializeCharts = () => {
 }
 
 const createPieChart = () => {
-  // Pie chart logic would go here
-  console.log('Pie chart initialized')
+  const canvas = document.getElementById('pieChartCanvas')
+  if (!canvas) return
+  
+  const ctx = canvas.getContext('2d')
+  const centerX = canvas.width / 2
+  const centerY = canvas.height / 2
+  const radius = 80
+  
+  // Data for pie chart
+  const data = [
+    { label: 'Goods', value: chartData.value.goods, color: '#667eea' },
+    { label: 'Works', value: chartData.value.works, color: '#17a2b8' },
+    { label: 'Service', value: chartData.value.service, color: '#ffc107' }
+  ]
+  
+  // Calculate total
+  const total = data.reduce((sum, item) => sum + item.value, 0)
+  
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  
+  // Draw pie slices
+  let currentAngle = -Math.PI / 2
+  
+  data.forEach((segment, index) => {
+    const sliceAngle = (segment.value / total) * 2 * Math.PI
+    
+    // Draw slice
+    ctx.beginPath()
+    ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle)
+    ctx.lineTo(centerX, centerY)
+    ctx.fillStyle = segment.color
+    ctx.fill()
+    
+    // Draw border
+    ctx.strokeStyle = '#fff'
+    ctx.lineWidth = 2
+    ctx.stroke()
+    
+    currentAngle += sliceAngle
+  })
+  
+  // Draw center circle for donut effect
+  ctx.beginPath()
+  ctx.arc(centerX, centerY, radius * 0.6, 0, 2 * Math.PI)
+  ctx.fillStyle = '#fff'
+  ctx.fill()
+  
+  console.log('Pie chart rendered with data:', chartData.value)
 }
 
 const updateBarCharts = () => {
@@ -961,6 +1010,16 @@ dl {
   border-radius: 0.25rem;
 }
 
+.welcome-card {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.welcome-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
 .widget-rounded-circle .avatar-lg {
   font-size: 1.2rem;
 }
@@ -1001,7 +1060,7 @@ dl {
 .table-responsive {
   display: block;
   width: 100%;
-  overflow-x: auto;
+  overflow: hidden !important;
 }
 
 /* Hide scrollbars completely */
@@ -1035,11 +1094,14 @@ dl {
 #dashboard-analytics * {
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;
+  overflow: hidden !important;
 }
 
 /* Hide table scrollbars */
 .table-responsive {
   overflow: hidden !important;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }
 
 .table-responsive::-webkit-scrollbar {
@@ -1048,9 +1110,43 @@ dl {
   height: 0 !important;
 }
 
-.table-responsive {
+/* Hide scrollbars from all elements */
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+* {
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;
+}
+
+/* Additional scrollbar hiding for nested elements */
+section::-webkit-scrollbar,
+div::-webkit-scrollbar,
+table::-webkit-scrollbar,
+tbody::-webkit-scrollbar,
+thead::-webkit-scrollbar,
+tr::-webkit-scrollbar,
+td::-webkit-scrollbar,
+th::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+section,
+div,
+table,
+tbody,
+thead,
+tr,
+td,
+th {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+  overflow: hidden !important;
 }
 
 

@@ -22,6 +22,49 @@
           <span class="nav-text" v-if="!isCollapsed">Dashboard</span>
         </router-link>
         
+         <!-- Procurement Setup -->
+        <div class="nav-group">
+          <div class="nav-item" @click="toggleSubmenu('procurement')" :class="{ active: isSubmenuActive('procurement') }">
+            <i class="fas fa-cogs"></i>
+            <span class="nav-text" v-if="!isCollapsed">Procurement Setup</span>
+            <i class="fas fa-chevron-down submenu-arrow" :class="{ 'rotated': isSubmenuActive('procurement') }"></i>
+          </div>
+          <div class="submenu" :class="{ 'show': isSubmenuActive('procurement') }">
+            <router-link to="/procurement-setup/workflow-team" class="submenu-item">
+              <i class="fas fa-users"></i>
+              <span class="nav-text" v-if="!isCollapsed">Workflow Team</span>
+            </router-link>
+            <router-link to="/procurement-setup/categories" class="submenu-item">
+              <i class="fas fa-tags"></i>
+              <span class="nav-text" v-if="!isCollapsed">Categories</span>
+            </router-link>
+            <router-link to="/procurement-setup/attachment-types" class="submenu-item">
+              <i class="fas fa-paperclip"></i>
+              <span class="nav-text" v-if="!isCollapsed">Attachment Types</span>
+            </router-link>
+            <router-link to="/procurement-setup/departments" class="submenu-item">
+              <i class="fas fa-building"></i>
+              <span class="nav-text" v-if="!isCollapsed">Departments</span>
+            </router-link>
+            <router-link to="/procurement-setup/committees" class="submenu-item">
+              <i class="fas fa-users-cog"></i>
+              <span class="nav-text" v-if="!isCollapsed">Committees</span>
+            </router-link>
+            <router-link to="/procurement-setup/vendor-relationships" class="submenu-item">
+              <i class="fas fa-handshake"></i>
+              <span class="nav-text" v-if="!isCollapsed">Vendor Relationships</span>
+            </router-link>
+            <router-link to="/procurement-setup/publications" class="submenu-item">
+              <i class="fas fa-newspaper"></i>
+              <span class="nav-text" v-if="!isCollapsed">Publications</span>
+            </router-link>
+            <router-link to="/procurement-setup/vendor-onboard" class="submenu-item">
+              <i class="fas fa-user-plus"></i>
+              <span class="nav-text" v-if="!isCollapsed">Vendor Onboard</span>
+            </router-link>
+          </div>
+        </div>
+        
         <!-- Purchase Requests -->
         <div class="nav-group">
           <div class="nav-item" @click="toggleSubmenu('requests')" :class="{ active: isSubmenuActive('requests') }">
@@ -200,6 +243,8 @@ onMounted(() => {
     activeSubmenu.value = 'settings'
   } else if (path.includes('/manual')) {
     activeSubmenu.value = 'manual'
+  } else if (path.includes('/procurement-setup')) {
+    activeSubmenu.value = 'procurement'
   }
 })
 </script>
