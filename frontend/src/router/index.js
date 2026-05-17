@@ -126,6 +126,24 @@ const routes = [
     name: 'AmountRange',
     component: () => import('@/views/setup/AmountRange.vue'),
     meta: { requiresAuth: true, requiresRole: ['admin', 'manager'] }
+  },
+  {
+    path: '/procurement-setup/vendor-point-area',
+    name: 'VendorPointArea',
+    component: () => import('@/views/setup/VendorPointArea.vue'),
+    meta: { requiresAuth: true, requiresRole: ['admin', 'manager'] }
+  },
+  {
+    path: '/procurement-setup/vendor-relationships',
+    name: 'VendorRelationshipsSetup',
+    component: () => import('@/views/setup/VendorRelationships.vue'),
+    meta: { requiresAuth: true, requiresRole: ['admin', 'manager'] }
+  },
+  {
+    path: '/procurement-setup/publications',
+    name: 'PublicationsSetup',
+    component: () => import('@/views/setup/Publications.vue'),
+    meta: { requiresAuth: true, requiresRole: ['admin', 'manager'] }
   }
 ]
 

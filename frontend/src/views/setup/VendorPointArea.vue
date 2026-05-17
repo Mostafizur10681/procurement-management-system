@@ -7,75 +7,90 @@
         <!-- Form Card -->
         <div class="card shadow-lg mb-4">
           <div class="card-body">
-            <h4 class="card-title text-bold-600 text-dark">Add Vendor Point Area</h4>
-            <hr>
+           
             
-            <form @submit.prevent="saveVendorPoint" ref="vendorPointForm">
-              <!-- Alert Messages -->
-              <div v-if="message" class="alert" :class="messageClass" role="alert">
-                {{ message }}
-                <button type="button" class="close" @click="clearMessage" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label class="required text-dark">Vendor</label>
-                    <select 
-                      v-model="form.vendor_id" 
-                      class="form-control" 
-                      :disabled="readonly"
-                      @change="handleVendorChange"
-                      required
-                    >
-                      <option value="">Select vendor</option>
-                      <option 
-                        v-for="vendor in vendors" 
-                        :key="vendor.id" 
-                        :value="vendor.id"
-                      >
-                        {{ vendor.name }}
-                      </option>
-                    </select>
-                  </div>
+              <form @submit.prevent="saveVendorPoint" ref="vendorPointForm">
+                <!-- Alert Messages -->
+                <div v-if="message" class="alert" :class="messageClass" role="alert" style="margin-bottom:0.67rem !important;">
+                  {{ message }}
+                  <button type="button" class="close" @click="clearMessage" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
                 
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="required text-dark">Point Area Name</label>
-                      <input 
-                        type="text" 
-                        v-model="form.area_name" 
-                        class="form-control"
-                        placeholder="Enter point area name"
-                        :readonly="readonly"
-                        required
-                      />
+                <div class="col-12">
+                  <div class="row">
+                    <input type="hidden" name="point_id" id="point_id" value="">
+                    
+                    <div class="col-md-4">
+                      <label class="required text-dark">Point Name</label>
+                      <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
+                        <input 
+                          type="text"
+                          v-model="form.point_name"
+                          class="form-control"
+                          id="point_name"
+                          name="point_name"
+                          autocomplete="off"
+                          required
+                        />
+                      </div>
+                      <span class="text-danger"></span>
                     </div>
-                  </div>
-                </div>
-                
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="text-dark">Description</label>
-                      <textarea 
-                        v-model="form.description" 
-                        class="form-control"
-                        rows="3"
-                        placeholder="Enter description"
-                        :readonly="readonly"
-                      ></textarea>
+                    
+                    <div class="col-md-4">
+                      <label class="required text-dark">Point Name Bangla</label>
+                      <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
+                        <input 
+                          type="text"
+                          v-model="form.point_name_bn"
+                          class="form-control datetimepicker-input"
+                          id="point_name_bn"
+                          name="point_name_bn"
+                          autocomplete="off"
+                          @input="validateBanglaInput"
+                          required
+                        />
+                      </div>
+                      <span class="text-danger"></span>
                     </div>
-                  </div>
-                </div>
-                
-                <div class="row">
-                  <div class="col-md-6">
+                    
+                    <div class="col-md-4">
+                      <label class="required text-dark">Total Score</label>
+                      <div class="input-group" id="datetimepicker2" data-target-input="nearest">
+                        <input 
+                          type="number" 
+                          maxlength="9"
+                          v-model="form.point_score"
+                          class="form-control"
+                          id="point_score"
+                          name="point_score"
+                          autocomplete="off"
+                          required
+                        />
+                      </div>
+                      <span class="text-danger"></span>
+                    </div>
+                    
+                    <div class="col-md-4">
+                      <label class="required text-dark">Year</label>
+                      <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
+                        <input 
+                          type="number"
+                          v-model="form.year"
+                          class="form-control"
+                          id="year"
+                          name="year"
+                          autocomplete="off"
+                          required
+                        />
+                      </div>
+                      <span class="text-danger"></span>
+                    </div>
+                    
+                    <div class="col-md-4 mt-3">
                     <div class="form-group">
-                      <label class="text-dark">Active Status</label>
+                      <label class="text-dark">Active</label>
                       <div class="switch-toggle">
                         <label class="switch" :class="{ 'switch-red': isSwitchRed }">
                           <input
@@ -92,29 +107,29 @@
                       </div>
                     </div>
                   </div>
-                </div>
-                
-                <div class="row mt-3">
-                  <div class="col-md-12 d-flex justify-content-end">
-                    <button 
-                      type="submit" 
-                      class="btn btn-success shadow me-2 mb-1" 
-                      :disabled="loading"
-                    >
-                      <i class="bx bx-save"></i> {{ editMode ? 'Update' : 'Save' }}
-                    </button>
-                    <button 
-                      type="button" 
-                      @click="cancelForm" 
-                      class="btn btn-danger mb-1"
-                    >
-                      <i class="fas fa-times"></i> Cancel
-                    </button>
                   </div>
                 </div>
+                
+                <div class="col-md-12 text-right mt-3" id="add" style="text-align: right;">
+                  <button 
+                    type="button" 
+                    @click="cancelForm" 
+                    class="btn btn-danger shadow mb-1 me-2"
+                  >
+                    <i class="fas fa-times"></i> Cancel
+                  </button>
+                  <button 
+                    type="submit" 
+                    id="submit"
+                    name="save" 
+                    class="btn btn-success shadow mb-1"
+                    :disabled="loading"
+                  >
+                    <i class="bx bx-save"></i> {{ editMode ? 'Update' : 'Submit' }}
+                  </button>
                 </div>
               </form>
-            </div>
+          </div>
         </div>
         
         <!-- List Card -->
@@ -166,56 +181,34 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const loading = ref(false)
 const editMode = ref(false)
-const readonly = ref(false)
 const message = ref('')
 const messageClass = ref('alert-danger')
 
 // Form data
 const form = reactive({
-  id: '',
-  vendor_id: '',
-  area_name: '',
-  description: '',
+  point_id: '',
+  point_name: '',
+  point_name_bn: '',
+  point_score: '',
+  year: '',
   active_yn: 'Y'
 })
 
-// Switch toggle state
-const isActive = computed({
-  get: () => form.active_yn === 'Y',
-  set: (value) => {
-    form.active_yn = value ? 'Y' : 'N'
-  }
-})
-
-// Switch state for styling (red when clicked)
-const isSwitchRed = ref(false)
-
 // Data arrays
-const vendors = ref([])
 const vendorPointAreas = ref([])
 
-// Toggle button methods
-const toggleActiveStatus = () => {
-  if (isSwitchRed.value) {
-    // If switch was red and clicked again, make it green
-    isActive.value = true
-    isSwitchRed.value = false
-  } else {
-    // First click - make it red
-    isActive.value = false
-    isSwitchRed.value = true
+// Validate Bangla input
+const validateBanglaInput = (event) => {
+  const input = event.target
+  const banglaRegex = /[\u0980-\u09FF\s]/
+  if (!banglaRegex.test(input.value)) {
+    ElMessage.warning('Please enter Bangla text only')
   }
-}
-
-// Handle vendor change
-const handleVendorChange = () => {
-  // Load vendor point areas for selected vendor
-  console.log('Vendor changed:', form.vendor_id)
 }
 
 // Clear message
@@ -248,29 +241,27 @@ const cancelForm = () => {
   
   // Reset mode
   editMode.value = false
-  readonly.value = false
   
   showMessage('Form has been cleared', 'info')
 }
 
-// Save vendor point area
+// Save vendor point
 const saveVendorPoint = async () => {
-  if (!form.vendor_id || !form.area_name) {
-    showMessage('Vendor and Point Area Name are required', 'error')
+  if (!form.point_name || !form.point_name_bn || !form.point_score || !form.year) {
+    showMessage('All fields are required', 'error')
     return
   }
   
   loading.value = true
   
   try {
-    const url = editMode.value ? `/api/setup/vendor-point-area/${form.id}` : '/api/setup/vendor-point-area'
+    const url = editMode.value ? `/api/setup/points-area/${form.point_id}` : '/api/setup/points-area'
     const method = editMode.value ? 'PUT' : 'POST'
     
     const response = await fetch(url, {
       method: method,
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
       },
       body: JSON.stringify(form)
     })
@@ -278,40 +269,40 @@ const saveVendorPoint = async () => {
     const data = await response.json()
     
     if (data.success) {
-      showMessage(`Vendor Point Area ${editMode.value ? 'updated' : 'created'} successfully!`)
+      showMessage(`Vendor Point ${editMode.value ? 'updated' : 'created'} successfully!`)
       if (!editMode.value) {
         cancelForm() // Clear form after successful creation
       }
       loadVendorPointAreas() // Reload the list
     } else {
-      showMessage(data.message || 'Failed to save vendor point area', 'error')
+      showMessage(data.message || 'Failed to save vendor point', 'error')
     }
   } catch (error) {
     console.error('Save error:', error)
-    showMessage('Failed to save vendor point area', 'error')
+    showMessage('Failed to save vendor point', 'error')
   } finally {
     loading.value = false
   }
 }
 
-// Edit vendor point area
+// Edit vendor point
 const editVendorPoint = (item) => {
   editMode.value = true
-  readonly.value = true
   
   // Populate form with item data
-  Object.keys(form).forEach(key => {
-    if (item.hasOwnProperty(key)) {
-      form[key] = item[key]
-    }
-  })
+  form.point_id = item.point_id || item.id
+  form.point_name = item.point_name
+  form.point_name_bn = item.point_name_bn
+  form.point_score = item.point_score
+  form.year = item.year
+  form.active_yn = item.active_yn
 }
 
-// Delete vendor point area
+// Delete vendor point
 const deleteVendorPoint = async (item) => {
   try {
     await ElMessageBox.confirm(
-      'Are you sure you want to delete this vendor point area?',
+      'Do you want to Delete?',
       'Confirm Delete',
       {
         confirmButtonText: 'Delete',
@@ -320,50 +311,36 @@ const deleteVendorPoint = async (item) => {
       }
     )
     
-    const response = await fetch(`/api/setup/vendor-point-area/${item.id}`, {
-      method: 'DELETE',
+    const response = await fetch('/api/setup/points-area-delete', {
+      method: 'POST',
       headers: {
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-      }
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: item.point_id || item.id
+      })
     })
     
     const data = await response.json()
     
     if (data.success) {
-      showMessage('Vendor point area deleted successfully!')
+      ElMessage.success('Deleted!')
       loadVendorPointAreas() // Reload the list
     } else {
-      showMessage(data.message || 'Failed to delete vendor point area', 'error')
+      showMessage(data.message || 'Failed to delete vendor point', 'error')
     }
   } catch (error) {
     if (error !== 'cancel') {
       console.error('Delete error:', error)
-      showMessage('Failed to delete vendor point area', 'error')
+      showMessage('Failed to delete vendor point', 'error')
     }
   }
 }
 
-// Load vendors
-const loadVendors = async () => {
-  try {
-    const response = await fetch('/api/setup/vendors')
-    const data = await response.json()
-    vendors.value = data.vendors || []
-  } catch (error) {
-    console.error('Failed to load vendors:', error)
-    // Add fallback data for testing
-    vendors.value = [
-      { id: 1, name: 'Vendor A' },
-      { id: 2, name: 'Vendor B' },
-      { id: 3, name: 'Vendor C' }
-    ]
-  }
-}
-
-// Load vendor point areas
+// Load vendor point areas (datatable simulation)
 const loadVendorPointAreas = async () => {
   try {
-    const response = await fetch('/api/setup/vendor-point-areas')
+    const response = await fetch('/api/setup/datatable-points-area')
     const data = await response.json()
     vendorPointAreas.value = data.data || []
   } catch (error) {
@@ -372,16 +349,29 @@ const loadVendorPointAreas = async () => {
     vendorPointAreas.value = [
       {
         id: 1,
-        vendor_name: 'Vendor A',
-        area_name: 'North Zone',
-        description: 'Main service area for northern region',
+        point_id: 1,
+        point_name: 'Quality',
+        point_name_bn: 'গুণমান',
+        point_score: 30,
+        year: 2024,
         active_yn: 'Y'
       },
       {
         id: 2,
-        vendor_name: 'Vendor B',
-        area_name: 'South Zone',
-        description: 'Service coverage for southern region',
+        point_id: 2,
+        point_name: 'Price',
+        point_name_bn: 'দাম',
+        point_score: 25,
+        year: 2024,
+        active_yn: 'Y'
+      },
+      {
+        id: 3,
+        point_id: 3,
+        point_name: 'Delivery',
+        point_name_bn: 'ডেলিভারি',
+        point_score: 20,
+        year: 2024,
         active_yn: 'Y'
       }
     ]
@@ -391,7 +381,6 @@ const loadVendorPointAreas = async () => {
 // Load initial data
 onMounted(async () => {
   console.log('VendorPointArea component mounted')
-  await loadVendors()
   await loadVendorPointAreas()
   console.log('Initial data loaded')
 })
